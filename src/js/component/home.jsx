@@ -1,26 +1,52 @@
-import React from "react";
+import React, { useState } from "react";
+import Formulario from "./Formulario.jsx"
 
 //include images into your bundle
-import rigoImage from "../../img/rigo-baby.jpg";
+
+const ListaTarea = (props) => {
+	return <div>
+		{props.tareas.map((tarea) => {
+            console.log({ tarea })
+            return <div>
+                {tarea.texto}
+                <button onClick={() => props.removerTarea(tarea.id)}>x</button>
+            </div>
+        })}
+	</div>
+}
 
 //create your first component
 const Home = () => {
-	return (
-		<div className="text-center">
-			<h1 className="text-center mt-5">Hello Rigo!</h1>
-			<p>
-				<img src={rigoImage} />
-			</p>
-			<a href="#" className="btn btn-success">
-				If you see this green button... bootstrap is working...
-			</a>
-			<p>
-				Made by{" "}
-				<a href="http://www.4geeksacademy.com">4Geeks Academy</a>, with
-				love!
-			</p>
-		</div>
-	);
-};
+    const [contador, actualizarContador] = useState(1)
+    const [tarea, actualizarTarea] = useState("")
+    const [tareas, actualizarTareas] = useState([])
+
+    const onClick = () => {
+        const auxTareas = [...tareas]
+        auxTareas.push({
+            id: contador,
+            texto: tarea,
+        })
+        actualizarTareas(auxTareas)
+        actualizarContador(contador + 1)
+        actualizarTarea("")
+    }
+
+    const removerTarea = (id) => {
+        const resultado = tareas.filter((tarea) => tarea.id !== id)
+        actualizarTareas(resultado)
+    }
+
+    return <div>
+        <Formulario
+            value={tarea}
+            actualizarTarea={actualizarTarea}
+            placeholder="Ingrese texto"
+            text="Oprimir"
+            onClick={onClick}
+        />
+        <ListaTarea tareas={tareas} removerTarea={removerTarea} />
+    </div>
+}
 
 export default Home;
